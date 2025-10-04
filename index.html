@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History Mini App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #1e1e2d; /* Telegram-style dark */
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    ::selection {
+      background: none;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    p {
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+
+    #content-wrapper {
+      max-width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    @media screen {
+      body:after {
+        content: '';
+        display: block;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        pointer-events: none;
+        background: rgba(0, 0, 0, 0);
+        z-index: 9999;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="content-wrapper">
+    <h1 id="title">Loading...</h1>
+    <p id="content"></p>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <script>
+    const topics = {
+      "ancient": {
+        title: "Ancient Civilizations",
+        content: `Ancient civilizations were the earliest complex societies that developed systems of writing, architecture, and governance.
+
+Key facts:
+- Major ancient civilizations include Egypt, Mesopotamia, Indus Valley, and China.
+- They built monumental structures like pyramids and ziggurats.
+- Developed early forms of government, trade, and culture.
+- Left behind historical records and artifacts that tell us about their lives.`
+      },
+      "middle": {
+        title: "Middle Ages",
+        content: `The Middle Ages, also known as the Medieval Period, lasted from the 5th to the 15th century.
+
+Key points:
+- Characterized by feudalism and the rise of kingdoms.
+- The Catholic Church had great power and influence.
+- Notable events: Crusades, Black Death, and the rise of universities.
+- Ended with the beginning of the Renaissance in Europe.`
+      },
+      "modern": {
+        title: "Modern History",
+        content: `Modern history refers to the period from the late 15th century to the present.
+
+Key points:
+- Marked by the Renaissance, Reformation, and the Age of Exploration.
+- Industrial Revolution changed economies and societies.
+- Wars like World War I and II shaped the 20th century.
+- The modern era is defined by globalization, technology, and democracy.`
+      }
+    };
+
+    function updateContent(topicKey) {
+      const titleElement = document.getElementById("title");
+      const contentElement = document.getElementById("content");
+
+      const topic = topics[topicKey];
+
+      if (topic) {
+        titleElement.textContent = topic.title;
+        contentElement.textContent = topic.content;
+      } else {
+        titleElement.textContent = "Topic Not Found";
+        contentElement.textContent = "This topic is not in our database. Use the bot to get a valid topic link.";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      let topicKey = null;
+
+      if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        if (Telegram.WebApp.initDataUnsafe?.start_param) {
+          topicKey = Telegram.WebApp.initDataUnsafe.start_param;
+        }
+      }
+
+      if (!topicKey) {
+        const urlParams = new URLSearchParams(window.location.search);
+        topicKey = urlParams.get("topic");
+      }
+
+      if (topicKey) {
+        updateContent(topicKey);
+      } else {
+        document.getElementById("title").textContent = "Welcome to Grade 9 History tutorials — stay with us!";
+      }
+    });
+  </script>
+</body>
+</html>
