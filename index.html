@@ -119,6 +119,7 @@ Key points:
 
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
+        alert("Received startapp: " + Telegram.WebApp.initDataUnsafe?.start_param);
         if (Telegram.WebApp.initDataUnsafe?.start_param) {
           topicKey = Telegram.WebApp.initDataUnsafe.start_param;
         }
